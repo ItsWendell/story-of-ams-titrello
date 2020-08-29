@@ -14,10 +14,7 @@ export class ListService {
   ) {}
 
   async create(list: CreateListDTO): Promise<ListModel> {
-    return this.listRepository.save({
-      ...list,
-      project: list.projectId,
-    } as any);
+    return this.listRepository.save(list);
   }
 
   findAll(): Promise<ListModel[]> {
@@ -34,7 +31,6 @@ export class ListService {
 
   async findOne(id: string): Promise<ListModel> {
     const data = await this.listRepository.findOne(id);
-    console.log('findOne', data);
     return data;
   }
 

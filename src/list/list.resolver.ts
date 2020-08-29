@@ -31,15 +31,12 @@ export class ListResolver {
 
   @ResolveField(returns => ProjectModel)
   async project(@Parent() list) {
-    console.log('List Resolver [field: project] Parent:', list);
-
     const { projectId } = list;
     return this.projectService.findOne(projectId);
   }
 
   @ResolveField(returns => [CardModel])
   async cards(@Parent() list) {
-    console.log('List resolver [Field: cards] Parent:', list);
     const { id } = list;
     return this.cardService.findByList(id);
   }

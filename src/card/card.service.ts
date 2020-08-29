@@ -16,12 +16,7 @@ export class CardService {
   ) {}
 
   async create(card: CreateCardDTO): Promise<CardModel> {
-    console.log('CREATING CARD', card);
-    return this.cardRepository.save({
-      ...card,
-      list: card.listId,
-      listId: card.listId,
-    } as any);
+    return this.cardRepository.save(card);
   }
 
   findAll(): Promise<CardModel[]> {

@@ -30,7 +30,6 @@ export class CardResolver {
 
   @ResolveField(returns => ProjectModel)
   async list(@Parent() card) {
-    console.log('GETTING LIST based on PARENT card', card);
     const { listId } = card;
     return this.listService.findOne(listId);
   }

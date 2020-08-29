@@ -28,7 +28,6 @@ export class ProjectResolver {
   @ResolveField(returns => [ListModel])
   async lists(@Parent() project) {
     const { id } = project;
-    console.log(project, this.listService.findByProject); // TODO: Remove
     return this.listService.findByProject(id);
   }
 
