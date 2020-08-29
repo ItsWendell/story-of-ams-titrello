@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CardModel } from './card.model';
-import { Repository, UpdateResult } from 'typeorm';
+import { Repository, DeleteResult } from 'typeorm';
 import { ProjectService } from 'src/project/project.service';
 import { CreateCardDTO, UpdateCardDTO } from './card.dto';
 import { ListService } from 'src/list/list.service';
@@ -32,7 +32,7 @@ export class CardService {
     return this.cardRepository
       .createQueryBuilder('card')
       .where('card.list = :id', { id })
-      .orderBy('order', 'ASC')
+      .orderBy('card.order', 'ASC')
       .getMany();
   }
 
@@ -47,5 +47,11 @@ export class CardService {
     });
 
     return await this.findOne(id);
+  }
+
+  deleteOne(id: string): Promise<DeleteResult> {
+    return this.cardRepository.delete({
+      id: id,
+    });
   }
 }

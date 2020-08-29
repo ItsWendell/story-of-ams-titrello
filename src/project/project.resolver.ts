@@ -20,7 +20,7 @@ export class ProjectResolver {
     @Inject(ListService) private listService: ListService,
   ) {}
 
-  @Query(returns => ProjectModel)
+  @Query(returns => ProjectModel, { nullable: true })
   async project(@Args('id') id: string): Promise<ProjectModel> {
     return await this.projectService.findOne(id);
   }
@@ -41,5 +41,13 @@ export class ProjectResolver {
   @Mutation(returns => ProjectModel)
   async createProject(@Args('name') name: string): Promise<ProjectModel> {
     return await this.projectService.create({ name });
+  }
+
+  @UseGuards(AuthGuard)
+  @Mutation(returns => ProjectModel, { nullable: true })
+  async deleteList(@Args('id') id: string): Promise<ProjectModel> {
+    const data = await this.projectService.findOne(id);
+    await this.projectService.deleteOne(id);
+    return data;
   }
 }

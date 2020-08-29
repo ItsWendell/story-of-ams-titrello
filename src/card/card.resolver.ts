@@ -23,7 +23,7 @@ export class CardResolver {
     @Inject(ListService) private listService: ListService,
   ) {}
 
-  @Query(returns => CardModel)
+  @Query(returns => CardModel, { nullable: true })
   async card(@Args('id') id: string): Promise<CardModel> {
     return await this.cardService.findOne(id);
   }
@@ -40,9 +40,18 @@ export class CardResolver {
     return await this.cardService.findAll();
   }
 
+  @UseGuards(AuthGuard)
   @Mutation(returns => CardModel)
   createCard(@Args('card') card: CreateCardDTO): Promise<CardModel> {
     return this.cardService.create(card);
+  }
+
+  @UseGuards(AuthGuard)
+  @Mutation(returns => CardModel, { nullable: true })
+  async deleteCard(@Args('id') id: string): Promise<CardModel> {
+    const data = await this.cardService.findOne(id);
+    await this.cardService.deleteOne(id);
+    return data;
   }
 
   @UseGuards(AuthGuard)

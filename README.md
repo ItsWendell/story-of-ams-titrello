@@ -1,75 +1,49 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo_text.svg" width="320" alt="Nest Logo" /></a>
-</p>
+# Story of AMS - Back-end Challange
 
-[travis-image]: https://api.travis-ci.org/nestjs/nest.svg?branch=master
-[travis-url]: https://travis-ci.org/nestjs/nest
-[linux-image]: https://img.shields.io/travis/nestjs/nest/master.svg?label=linux
-[linux-url]: https://travis-ci.org/nestjs/nest
-  
-  <p align="center">A progressive <a href="http://nodejs.org" target="blank">Node.js</a> framework for building efficient and scalable server-side applications, heavily inspired by <a href="https://angular.io" target="blank">Angular</a>.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore"><img src="https://img.shields.io/npm/dm/@nestjs/core.svg" alt="NPM Downloads" /></a>
-<a href="https://travis-ci.org/nestjs/nest"><img src="https://api.travis-ci.org/nestjs/nest.svg?branch=master" alt="Travis" /></a>
-<a href="https://travis-ci.org/nestjs/nest"><img src="https://img.shields.io/travis/nestjs/nest/master.svg?label=linux" alt="Linux" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#5" alt="Coverage" /></a>
-<a href="https://gitter.im/nestjs/nestjs?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=body_badge"><img src="https://badges.gitter.im/nestjs/nestjs.svg" alt="Gitter" /></a>
-<a href="https://opencollective.com/nest#backer"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec"><img src="https://img.shields.io/badge/Donate-PayPal-dc3d53.svg"/></a>
-  <a href="https://twitter.com/nestframework"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+Here's my solution to the back-end challange for **Story of AMS**, an trello-like GraphQL API for a project management application based on given design.
 
-## Description
+## Requirements
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+- Use NestJS together with GraphQL
+- Connect the database and create schemas / models
+- Tile management (Creating, Retreiving, Updating and Deleting)
+- Make the titles moveable between phases
+- Authentication on the create, update and delete mutations
 
-## Installation
+## Getting Started.
 
-```bash
-$ npm install
-```
+Make sure node / npm, docker and docker-compose are installed.
 
-## Running the app
+1. Install node modules: `npm install`
+2. Copy .env.example to .env: `cp .env.example .env`
+3. Start database service: `docker-compose up`
+4. Start dev environment: `npm run start:dev`
+5. Visit the Playground at [http://localhost:3000/graphql](http://localhost:3000/graphql) to play with the API and see the documentation.
 
-```bash
-# development
-$ npm run start
+## Authentication
 
-# watch mode
-$ npm run start:dev
+I kept the authentication super simple for now, the update, create, delete mutations are protected with a custom auth gaurd (Which is located in the main src folder), which expects an 'authentication' header with a specific value, which can be configured in the .env file. Normally if I had a little bit more time I would implement authentication with PassportJS with JWT tokens.
 
-# production mode
-$ npm run start:prod
-```
+I assumed the core of this exercise was creating the basic API for tiles, so I cut some corners here.
 
-## Test
+You can add the 'authentication' header with the default value 'secret' to the GraphQL Playground to access the Update, Delete, Create actions.
 
-```bash
-# unit tests
-$ npm run test
+## Implementation
 
-# e2e tests
-$ npm run test:e2e
+I've decided to go with a code-first approach, letting NestJS GraphQL module generate the schema MDL for us. This has the advantage of the schema always be in sync.
 
-# test coverage
-$ npm run test:cov
-```
+For the implementation I've choosen to create 3 models.
 
-## Support
+1. Projects - The 'project' that hosts the phases.
+2. Lists - The 'phases' related to a project.
+3. Cards - The 'tasks' connected to a list / 'phase'.
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+For making the cards movable between lists, I've decided to keep it simple and just make the listId changeable for each card. To change the order of the lists, or the cards, both models have an 'order' property that can be changed using mutations.
 
-## Stay in touch
+## How I would personally build this API
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+In the recent few months I've been getting more and more familiar with Hasura. Hasura is tool that is able to create instantly an real-time GraphQL API based on a new, or existing postgres database. It supports an advanced permissions column / row level permission system and custom business logic based on events or adding custom queries or mutation is supported through webhooks or joining custom GraphQL servers.
 
-## License
+You save a lot of time by not having to write a lot of the standard boilerplate required for getting CRUD working for entities in GraphQL, definitly worth looking into.
 
-  Nest is [MIT licensed](LICENSE).
+- [Hasura](https://hasura.io/opensource/)

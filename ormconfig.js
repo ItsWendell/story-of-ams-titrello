@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 require("dotenv").config();
 
 console.log('DATABASE URL', process.env.DATABASE_URL);

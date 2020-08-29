@@ -24,7 +24,7 @@ export class ListResolver {
     @Inject(CardService) private cardService: CardService,
   ) {}
 
-  @Query(returns => ListModel)
+  @Query(returns => ListModel, { nullable: true })
   async list(@Args('id') id: string): Promise<ListModel> {
     return await this.listService.findOne(id);
   }
@@ -49,17 +49,26 @@ export class ListResolver {
     return await this.listService.findAll();
   }
 
+  @UseGuards(AuthGuard)
   @Mutation(returns => ListModel)
   async createList(@Args('list') list: CreateListDTO): Promise<ListModel> {
     return await this.listService.create(list);
   }
 
   @UseGuards(AuthGuard)
-  @Mutation(returns => CardModel)
+  @Mutation(returns => CardModel, { nullable: true })
   updateList(
     @Args('id') id: string,
     @Args('list') list: UpdateListDTO,
   ): Promise<ListModel> {
     return this.listService.updateOne(id, list);
+  }
+
+  @UseGuards(AuthGuard)
+  @Mutation(returns => ListModel, { nullable: true })
+  async deleteList(@Args('id') id: string): Promise<ListModel> {
+    const data = await this.listService.findOne(id);
+    await this.listService.deleteOne(id);
+    return data;
   }
 }

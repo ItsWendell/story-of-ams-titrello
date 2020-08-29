@@ -38,19 +38,21 @@ type ProjectModel {
 }
 
 type Query {
-  project(id: String!): ProjectModel!
+  project(id: String!): ProjectModel
   projects: [ProjectModel!]!
-  list(id: String!): ListModel!
+  list(id: String!): ListModel
   lists: [ListModel!]!
-  card(id: String!): CardModel!
+  card(id: String!): CardModel
   cards: [CardModel!]!
 }
 
 type Mutation {
   createProject(name: String!): ProjectModel!
+  deleteList(id: String!): ListModel
   createList(list: CreateListDTO!): ListModel!
-  updateList(list: UpdateListDTO!, id: String!): CardModel!
+  updateList(list: UpdateListDTO!, id: String!): CardModel
   createCard(card: CreateCardDTO!): CardModel!
+  deleteCard(id: String!): CardModel
   updateCard(card: UpdateCardDTO!, id: String!): CardModel!
 }
 

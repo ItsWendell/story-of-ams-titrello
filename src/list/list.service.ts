@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { CreateListDTO, UpdateListDTO } from './list.dto';
 import { ListModel } from './list.model';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, DeleteResult } from 'typeorm';
 import { ProjectService } from 'src/project/project.service';
 
 @Injectable()
@@ -25,10 +25,10 @@ export class ListService {
   }
 
   findByProject(id: string): Promise<ListModel[]> {
-    console.log('FIND BY PROJECT', id);
     return this.listRepository
       .createQueryBuilder('list')
       .where('list.project = :id', { id })
+      .orderBy('list.order', 'ASC')
       .getMany();
   }
 
@@ -45,5 +45,11 @@ export class ListService {
     });
 
     return await this.findOne(id);
+  }
+
+  deleteOne(id: string): Promise<DeleteResult> {
+    return this.listRepository.delete({
+      id: id,
+    });
   }
 }
