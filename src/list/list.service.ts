@@ -14,7 +14,10 @@ export class ListService {
   ) {}
 
   async create(list: CreateListDTO): Promise<ListModel> {
-    return this.listRepository.save(list);
+    return this.listRepository.save({
+      ...list,
+      project: list.projectId,
+    } as any);
   }
 
   findAll(): Promise<ListModel[]> {

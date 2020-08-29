@@ -11,8 +11,10 @@ export class ProjectService {
     private projectRepository: Repository<ProjectModel>,
   ) {}
 
-  create(details: CreateProjectDTO): Promise<ProjectModel> {
-    return this.projectRepository.save(details);
+  create(project: CreateProjectDTO): Promise<ProjectModel> {
+    return this.projectRepository.save({
+      ...project,
+    });
   }
 
   findAll(): Promise<ProjectModel[]> {
